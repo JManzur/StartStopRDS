@@ -17,7 +17,10 @@ data "aws_iam_policy_document" "policy_source" {
       "rds:DescribeDBInstances",
       "rds:StartDBInstance",
       "rds:StopDBInstance",
-      "rds:ListTagsForResource"
+      "rds:ListTagsForResource",
+      "rds:CreateDBSnapshot",
+      "rds:DeleteDBSnapshot",
+      "rds:DescribeDBSnapshots"
     ]
     resources = ["*"]
   }

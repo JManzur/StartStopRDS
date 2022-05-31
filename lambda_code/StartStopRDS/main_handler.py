@@ -1,8 +1,7 @@
-from ast import Return
 from botocore.exceptions import ClientError
+from datetime import datetime
 import boto3
 import logging, json
-from datetime import datetime
 
 # Instantiate logger
 logger = logging.getLogger()
@@ -11,8 +10,6 @@ logger.setLevel(logging.INFO)
 # Instantiate boto3 client
 client = boto3.client('rds')
 
-
-time_stamp = datetime.today().strftime('%d-%m-%Y')
 def lambda_handler(event, context):
     action = event.get('action')
 
@@ -34,13 +31,17 @@ def lambda_handler(event, context):
                     for tag in get_tags['TagList']:
                         if 'Auto-StartStop-Enabled' in tag['Key'] and tag['Value'] == 'true':
                             DBInstanceIdentifier =  instance["DBInstanceIdentifier"]
+                            SnapshotPrefix = "autostop"
+                            time_stamp = datetime.today().strftime('%d-%m-%Y-%H-%M')
                             logger.info("The Instance {} will be stopped".format(DBInstanceIdentifier))
                             stop_instance = client.stop_db_instance(
                                 DBInstanceIdentifier='{}'.format(DBInstanceIdentifier),
-                                DBSnapshotIdentifier='{}-{}'.format(DBInstanceIdentifier, time_stamp)
+                                DBSnapshotIdentifier='{}-{}'.format(SnapshotPrefix, time_stamp)
                                 )
-                            return stop_instance
-                    
+                            response = json.dumps(stop_instance, sort_keys=True, default=str)
+                            logger.info(response)
+                            return response
+
         if action.lower() ==  'start':
             get_instances = client.describe_db_instances()
             for instance in get_instances["DBInstances"]:
@@ -55,8 +56,9 @@ def lambda_handler(event, context):
                             start_instance = client.start_db_instance(
                                 DBInstanceIdentifier='{}'.format(DBInstanceIdentifier)
                                 )
-                            return start_instance
-
+                            response = json.dumps(start_instance, sort_keys=True, default=str)
+                            logger.info(response)
+                            return response
 
     except ClientError as error:
         logger.error(error)
