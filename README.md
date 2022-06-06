@@ -42,6 +42,24 @@ Located in the root directory, make the necessary changes in the variables.tf fi
 terraform apply
 ```
 
+## Debugging / Troubleshooting:
+
+To test the lambda function you can use the following "testing event":
+
+Start test:
+```json
+{
+  "action": "start"
+}
+```
+
+Stop test:
+```json
+{
+  "action": "stop"
+}
+```
+
 ## Author:
 
 - [@JManzur](https://jmanzur.com)
