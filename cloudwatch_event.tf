@@ -7,7 +7,7 @@ resource "aws_cloudwatch_event_rule" "auto-stop-rds-mon-fri" {
   name                = "auto-stop-rds-mon-fri"
   description         = "Auto Stop RDS at 19:00 EST Monday to Friday"
   schedule_expression = "cron(0 23 ? * MON-FRI *)"
-  is_enabled          = false
+  is_enabled          = var.enable_event_rules
 }
 
 resource "aws_cloudwatch_event_target" "lambda_stop_target" {
@@ -30,7 +30,7 @@ resource "aws_cloudwatch_event_rule" "auto-start-rds-mon-fri" {
   name                = "auto-start-rds-mon-fri"
   description         = "Auto start RDS at 08:50 EST Monday to Friday"
   schedule_expression = "cron(50 12 ? * MON-FRI *)"
-  is_enabled          = false
+  is_enabled          = var.enable_event_rules
 }
 
 resource "aws_cloudwatch_event_target" "lambda_start_target" {
@@ -51,10 +51,10 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_star_rds_function" {
 
 # Event Rule Delete Snapshot
 resource "aws_cloudwatch_event_rule" "delete-db-snapshot-on-fri" {
-  name                = "delete-db-snapshot-on-fri"
+  name                = "delete-db-snapshot-on-friday"
   description         = "Delete DB Snapshot at 08:50 EST on Friday"
-  schedule_expression = "cron(50 12 ? * FRI *)"
-  is_enabled          = false
+  schedule_expression = "cron(00 23 ? * FRI *)"
+  is_enabled          = var.enable_event_rules
 }
 
 resource "aws_cloudwatch_event_target" "lambda_delete_target" {

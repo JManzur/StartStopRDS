@@ -9,6 +9,11 @@ variable "aws_profile" {
   default = ""
 }
 
+variable "enable_event_rules" {
+  type    = bool
+  default = false
+}
+
 /* Tags Variables */
 #Use: tags = merge(var.project-tags, { Name = "${var.resource-name-tag}-place-holder" }, )
 variable "project-tags" {

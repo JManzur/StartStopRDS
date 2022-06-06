@@ -42,7 +42,7 @@ data "aws_iam_policy_document" "role_source" {
 resource "aws_iam_policy" "policy" {
   name        = "StartStopRDS_policy"
   path        = "/"
-  description = "StartOutbound using Lambda"
+  description = "StartStopRDS Policy"
   policy      = data.aws_iam_policy_document.policy_source.json
   tags        = { Name = "${var.name-prefix}-policy" }
 }
